@@ -1,0 +1,66 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+.main-container {
+	width: 100%;
+}
+
+.main {
+	width: 500;
+	margin: 0 auto;
+}
+
+.stroke {
+	fill: none;
+	stroke: #cbcbcb;
+	stroke-width: 1px;
+}
+
+.fill {
+	fill: #86D3FF;
+	fill-opacity: 1;
+}
+
+.graticule {
+	fill: none;
+	stroke: #777;
+	stroke-width: .5px;
+	stroke-opacity: .5;
+}
+
+.land {
+	stroke: #33aa5b;
+	stroke-opacity: 1;
+	fill: #87d39a;
+	fill-opacity: 1;
+}
+
+.boundary {
+	fill: none;
+	stroke: #fff;
+	stroke-width: .5px;
+}
+
+#time-picker, #date-picker {
+	font-size: 2rem;
+	margin: .5rem;
+}
+
+.ortho-time {
+	font-weight: bold;
+	font-size: 2rem;
+}
+
+.time-travel button {
+	color: #fff;
+	background-color: #777;
+	font-size: 1.5rem;
+	border-radius: .2rem;
+	cursor: pointer;
+	margin: .5rem;
+}

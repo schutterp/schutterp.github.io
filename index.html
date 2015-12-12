@@ -1,0 +1,34 @@
+<html doctype="html">
+	<head>
+		<meta charset="utf8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="css/ortho.css">
+		<script src="js/lib/d3.js"></script>
+		<script src="js/lib/topojson.js"></script>
+		<script src="js/earth-rotation.js"></script>
+	</head>
+	<body>
+		<div class="main-container">
+			<!--<input id="date-picker" type="date" autofocus value="2015-12-05" />
+			<input id="time-picker" type="time" value="08:56" />-->
+			<!-- <img id="epic_img" src="http://epic.gsfc.nasa.gov//epic-archive/jpg/epic_1b_20151205145609_00.jpg" style="height:1120px;width:1120px;opacity:0.5;position:absolute;top:0px;left:160px;"> -->
+			<div class="main">
+				<div class="datetime-form">
+					<input id="date-picker" type="date" autofocus />
+					<input id="time-picker" type="time" />
+					<div class="time-travel">
+						<button id="do-time-jump">Go</button>
+						<button id="do-time-travel">Animate</button>
+					</div>
+				</div>
+				<div class="ortho-container"></div>
+				<div class="ortho-time">
+					<div id="current-time"></div>
+					<div id="current-date"></div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/orthographic.js" charset="utf8"></script>
+	</body>
+</html>
