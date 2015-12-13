@@ -1,8 +1,8 @@
-var width = 500,
-	height = 500;
+var width = 450,
+	height = 450;
 
 var projection = d3.geo.orthographic()
-	.scale(200)
+	.scale(190)
 	.translate([width / 2, height / 2])
 	.clipAngle(90)
 	// how does this affect perf?
@@ -14,7 +14,7 @@ var path = d3.geo.path()
 
 var graticule = d3.geo.graticule();
 
-var svg = d3.select('.ortho-container').append('svg')
+var svg = d3.select('.globe').append('svg')
 	.attr('width', width)
 	.attr('height', height);
 
@@ -68,14 +68,24 @@ d3.select(self.frameElement).style('height', height + 'px');
 
 var animationInProgress = false;
 
-function timeTravelTo (date) {
+function animateTo (date) {
+	var speed = 1;
 	var minDelta = (date - positioner.getDate()) / 60 / 1000;
 	if (minDelta === 0) {
 		return;
 	}
 	else {
 		moveForward = minDelta > 0 ? 1 : -1;
+		// don't take more than 10 seconds for animation
+		if (Math.abs(minDelta) > (10 * 1000)) {
+			speed = Math.abs(minDelta) / (10 * 1000);
+		}
+		// but also don't take less than 1 second
+		else if (Math.abs(minDelta) < (1 * 1000)) {
+			speed = Math.abs(minDelta) / (1 * 1000)
+		}
 	}
+
 	// ensures minLeftToTravel is a positive number
 	var minLeftToTravel = minDelta * moveForward;
 	var prevT = 0;
@@ -84,28 +94,33 @@ function timeTravelTo (date) {
 		return;
 	}
 
-	// rotate until the difference in minutes is used up
-	d3.timer(function (t) {
-		var deltaMs = t - prevT;
-		prevT = t;
-		if (deltaMs > minLeftToTravel) {
-			deltaMs = minLeftToTravel;
-		}
-		minLeftToTravel = minLeftToTravel - deltaMs;
+	return new Promise(function (resolve, reject) {
+		// rotate until the difference in minutes is used up
+		d3.timer(function (t) {
+			var deltaMs = t - prevT;
+			deltaMs = deltaMs * speed;
+			prevT = t;
+			if (deltaMs > minLeftToTravel) {
+				deltaMs = minLeftToTravel;
+			}
+			minLeftToTravel = minLeftToTravel - deltaMs;
 
-		console.log('time travel ' + (moveForward > 0 ? 'forward ' : 'backward ') + deltaMs + ' minutes');
+			console.log('time travel ' + (moveForward > 0 ? 'forward ' : 'backward ') + deltaMs + ' minutes');
 
-		positioner.rotateByMin(moveForward * deltaMs);
-		projection.rotate(positioner.getRotation());
-		land.attr('d', path);
-		grat.attr('d', path);
+			positioner.rotateByMin(moveForward * deltaMs);
+			projection.rotate(positioner.getRotation());
+			land.attr('d', path);
+			grat.attr('d', path);
 
-		displayDateAndTime(positioner.getDate());
+			displayDateAndTime(positioner.getDate());
 
-		animationInProgress = minLeftToTravel > 0;
-		return !animationInProgress;
+			animationInProgress = minLeftToTravel > 0;
+			if (!animationInProgress) {
+				resolve(positioner.getDate());
+			}
+			return !animationInProgress;
+		});
 	});
-
 }
 
 function jumpTo(date) {
@@ -116,28 +131,57 @@ function jumpTo(date) {
 	projection.rotate(positioner.getRotation());
 	land.attr('d', path);
 	grat.attr('d', path);
+	return Promise.resolve(date);
 }
 
 function displayDateAndTime(date) {
-	document.getElementById('current-time').innerHTML = date.toTimeString().slice(0,8);
+	var hours = date.getHours();
+	var amPm = 'am';
+	if (hours >= 12) {
+		amPm = 'pm';
+		if (hours > 12) {
+			hours = hours - 12;
+		}
+	}
+	else if (hours === 0) {
+		hours = 12;
+	}
+	document.getElementById('current-time').innerHTML = [hours, date.getMinutes()].join(':') + amPm;
 	document.getElementById('current-date').innerHTML = date.toDateString();
+	document.getElementById('current-tz').innerHTML = /\(([A-Z]{3})\)$/.exec(date.toTimeString())[1];
 }
 
 var getDateFromIsoDate = function (dateStr) {
 	var dateParts = dateStr.split('-');
 	// zero offset month (dateParts[1])
-	return [dateParts[0], dateParts[1] - 1, dateParts[2]];
+	return [dateParts[0], dateParts[1] - 1 + '', dateParts[2]];
 };
 
 document.getElementById('do-time-jump').addEventListener('click', function () {
-	jumpToChosenDatetime();
+	document.getElementById('epic-img').className = '';
+	goToChosenDatetime(jumpTo);
+	displayDateAndTime(positioner.getDate());
 });
 
 document.getElementById('do-time-travel').addEventListener('click', function () {
-	animateToChosenDatetime();
+	document.getElementById('epic-img').className = '';
+	goToChosenDatetime(animateTo);
 });
 
-function animateToChosenDatetime() {
+function showEpicImage(date) {
+	var TEST_IMG = 'epic_1b_20151205145609_00';
+	var img = document.getElementById('epic-img');
+	var TEST_IMG_DATE = new Date(2015, 11, 5, 8, 56);
+	// if the globe stops within 15 minutes, then show the img
+	if (Math.abs(TEST_IMG_DATE - date) < (15 * 60 * 1000)) {
+		img.onload = function () {
+			img.className = 'in';
+		};
+		img.src = 'http://epic.gsfc.nasa.gov/epic-archive/jpg/' + TEST_IMG + '.jpg';
+	}
+}
+
+function goToChosenDatetime(timeTravelFn) {
 	var chosenDate = document.getElementById('date-picker').value;
 	var chosenTime = document.getElementById('time-picker').value;
 	var dateParts, timeParts;
@@ -153,29 +197,18 @@ function animateToChosenDatetime() {
 	else {
 		timeParts = [0, 0];
 	}
-	timeTravelTo(new Date(dateParts[0], dateParts[1], dateParts[2], timeParts[0], timeParts[1]));
+	timeTravelFn(
+		new Date(
+			dateParts[0],
+			dateParts[1],
+			dateParts[2],
+			timeParts[0],
+			timeParts[1]
+		))
+		.then(showEpicImage);
 }
 
-function jumpToChosenDatetime() {
-	var chosenDate = document.getElementById('date-picker').value;
-	var chosenTime = document.getElementById('time-picker').value;
-	var dateParts, timeParts;
-	if (chosenDate.length) {
-		dateParts = getDateFromIsoDate(chosenDate);
-	}
-	else {
-		dateParts = [2015, 0, 1];
-	}
-	if (chosenTime.length) {
-		timeParts = chosenTime.split(':');
-	}
-	else {
-		timeParts = [0, 0];
-	}
-	jumpTo(new Date(dateParts[0], dateParts[1], dateParts[2], timeParts[0], timeParts[1]));
-}
-
-// document.getElementById('date-picker').value = toDateInputValue(startDate);
-document.getElementById('date-picker').valueAsDate = startDate;
 document.getElementById('time-picker').value = startDate.toTimeString().slice(0,8);
+var startDateCopy = new Date(startDate);
+document.getElementById('date-picker').valueAsDate = startDateCopy.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
 displayDateAndTime(startDate);

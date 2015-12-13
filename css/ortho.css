@@ -4,6 +4,7 @@
 
 body {
 	font-family: sans-serif;
+	min-height: 100%;
 }
 
 .main-container {
@@ -63,4 +64,26 @@ body {
 	border-radius: .2rem;
 	cursor: pointer;
 	margin: .5rem;
+}
+
+.ortho-container {
+	position: relative;
+}
+
+#epic-img-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#epic-img {
+	height: 450;
+	width: 450;
+	opacity: 0;
+	-webkit-transition: opacity 2s;
+	transition: opacity 2s;
+}
+
+#epic-img.in {
+	opacity: 1;
 }
