@@ -80,8 +80,8 @@ body {
 	height: 450;
 	width: 450;
 	opacity: 0;
-	-webkit-transition: opacity 2s;
-	transition: opacity 2s;
+	-webkit-transition: opacity 1s;
+	transition: opacity 1s;
 }
 
 #epic-img.in {

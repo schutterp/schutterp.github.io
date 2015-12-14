@@ -1,4 +1,5 @@
-// assume winter solstice occurs at midnight on 12/21
+// assume winter solstice occurs at UTC midnight on 12/21
+// Approximate earth axis and pretend there's no wobble...
 // winter: [x, -23.5, 0   ]
 // spring: [x,  0,   -23.5]
 // summer: [x,  23.5, 0   ]
@@ -7,9 +8,6 @@
 // -yaw (x) will travel between -180 and 180 degrees over 24 hours
 // -pitch (y) will travel between -23.5 and 23.5 degrees over six months
 // -roll (z) will travel between -23.5 and 23.5 degrees over six months
-
-// usage: create the earth thing, then pass in dates to get the placement of the earth for that date
-// should be able to just pass in number of minutes in either direction to change the date as well
 
 var DEGREES_PER_MIN = 360 / (24 * 60);
 // var INITIAL_ROTATION = {
@@ -75,7 +73,7 @@ Positioner.getLat = function (minSinceWinterSolstice) {
 	return newAngle;
 };
 
-// WTF?? why do I need this:
+// TODO: WTF?? why do I need this:
 var CORRECTION_DEGREES = -90;
 
 var MINUTES_IN_ONE_YEAR = 365 * 24 * 60;
