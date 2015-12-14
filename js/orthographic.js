@@ -171,7 +171,7 @@ document.getElementById('do-time-travel').addEventListener('click', function () 
 function showEpicImage(date) {
 	var TEST_IMG = 'epic_1b_20151205145609_00';
 	var img = document.getElementById('epic-img');
-	var TEST_IMG_DATE = new Date(2015, 11, 5, 8, 56);
+	var TEST_IMG_DATE = new Date(Date.UTC(2015, 11, 5, 14, 56))
 	// if the globe stops within 15 minutes, then show the img
 	if (Math.abs(TEST_IMG_DATE - date) < (15 * 60 * 1000)) {
 		img.onload = function () {
