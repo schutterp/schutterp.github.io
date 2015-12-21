@@ -5,6 +5,12 @@
 body {
 	font-family: sans-serif;
 	min-height: 100%;
+	color: #513B56;
+	min-width: 500px;
+}
+
+h1 {
+	text-align: center;
 }
 
 .main-container {
@@ -12,7 +18,7 @@ body {
 }
 
 .main {
-	width: 500;
+	width: 500px;
 	margin: 0 auto;
 }
 
@@ -23,21 +29,21 @@ body {
 }
 
 .fill {
-	fill: #86D3FF;
+	fill: #4C8FA5; //#348AA7;
 	fill-opacity: 1;
 }
 
 .graticule {
 	fill: none;
-	stroke: #777;
+	stroke: #fff;
 	stroke-width: .5px;
-	stroke-opacity: .5;
+	stroke-opacity: 0.25;
 }
 
 .land {
-	stroke: #33aa5b;
-	stroke-opacity: 1;
-	fill: #87d39a;
+	/*stroke: #6D6D72;
+	stroke-opacity: .5;*/
+	fill: #92D3B6;//#5DD39E;
 	fill-opacity: 1;
 }
 
@@ -49,17 +55,28 @@ body {
 
 #time-picker, #date-picker {
 	font-size: 2rem;
-	margin: .5rem;
+	margin-bottom: 1rem;
 }
 
 .ortho-time {
 	font-weight: bold;
 	font-size: 2rem;
+	display: flex;
+	flex-direction: row;
+	padding: .5rem;
+}
+
+#current-time {
+	margin-right: .5rem;
+}
+
+#current-tz {
+	flex-grow: 1;
 }
 
 .time-travel button {
 	color: #fff;
-	background-color: #777;
+	background-color: #348AA7;//#525174;
 	font-size: 1.5rem;
 	border-radius: .2rem;
 	cursor: pointer;
@@ -68,6 +85,8 @@ body {
 
 .ortho-container {
 	position: relative;
+	width: 450px;
+	margin: 0 auto;
 }
 
 #epic-img-container {
@@ -77,8 +96,8 @@ body {
 }
 
 #epic-img {
-	height: 450;
-	width: 450;
+	height: 450px;
+	width: 450px;
 	opacity: 0;
 	-webkit-transition: opacity 1s;
 	transition: opacity 1s;
@@ -86,4 +105,29 @@ body {
 
 #epic-img.in {
 	opacity: 1;
+}
+
+.datetime-form {
+	display: flex;
+	flex-flow: row wrap;
+	padding: .5rem;
+}
+.datetime-form input {
+	flex-grow: 1;
+}
+.time-travel {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+#do-time-jump, #do-time-travel {
+	font-weight: 500;
+	padding: 1rem;
+	flex-grow: 1;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-height: 568px) and (orientation : portrait) and (-webkit-device-pixel-ratio: 2) {
+	#do-time-jump, #do-time-travel {
+		font-size: 2rem;
+	}
 }

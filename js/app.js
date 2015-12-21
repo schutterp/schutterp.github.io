@@ -86,7 +86,10 @@
 			else if (hours === 0) {
 				hours = 12;
 			}
-			document.getElementById('current-time').innerHTML = [hours, date.getMinutes()].join(':') + amPm;
+			document.getElementById('current-time').innerHTML = [
+				hours,
+				(function (min) {return min < 10 ? '0' + min : min}(date.getMinutes()))
+			].join(':') + amPm;
 			document.getElementById('current-date').innerHTML = date.toDateString();
 			document.getElementById('current-tz').innerHTML = /\(([A-Z]{3})\)$/.exec(date.toTimeString())[1];
 		}
