@@ -1,11 +1,11 @@
 (function (global, ortho) {
-
+	var SHOW_CLASS_NAME = 'show-epic';
 	var app = {
 		init: function () {
 			var startDate = new Date();
 
 			this.ortho = ortho.init(startDate);
-
+			this.bodyEl = document.body;
 			var startDateCopy = new Date(startDate);
 			document.getElementById('time-picker').value = startDate.toTimeString().slice(0,8);
 			document.getElementById('date-picker').valueAsDate = startDateCopy.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
@@ -13,19 +13,21 @@
 			this.applyListeners();
 
 			this.displayDateAndTime(startDate);
+
+			return this;
 		},
 
 		applyListeners: function () {
 			document.getElementById('do-time-jump').addEventListener('click', function () {
-				document.getElementById('epic-img').className = '';
+				this.bodyEl.className = this.bodyEl.className.replace(new RegExp('\\b' + SHOW_CLASS_NAME + '\\b'),'');
 				this.ortho.jumpTo(this.getSelectedDate(), this.displayDateAndTime.bind(this))
-					.then(this.showEpicImage);
+					.then(this.showEpicImage.bind(this));
 			}.bind(this));
 
 			document.getElementById('do-time-travel').addEventListener('click', function () {
-				document.getElementById('epic-img').className = '';
+				this.bodyEl.className = this.bodyEl.className.replace(new RegExp('\\b' + SHOW_CLASS_NAME + '\\b'),'');
 				this.ortho.animateTo(this.getSelectedDate(), this.displayDateAndTime.bind(this))
-					.then(this.showEpicImage);
+					.then(this.showEpicImage.bind(this));
 			}.bind(this));
 		},
 
@@ -63,13 +65,15 @@
 
 		showEpicImage: function(date) {
 			var TEST_IMG = 'epic_1b_20151205145609_00';
+			var TEST_IMG_DATE = new Date(Date.UTC(2015, 11, 5, 14, 56));
+
 			var img = document.getElementById('epic-img');
-			var TEST_IMG_DATE = new Date(Date.UTC(2015, 11, 5, 14, 56))
+
 			// if the globe stops within 15 minutes, then show the img
 			if (Math.abs(TEST_IMG_DATE - date) < (15 * 60 * 1000)) {
 				img.onload = function () {
-					img.className = 'in';
-				};
+					this.bodyEl.className += SHOW_CLASS_NAME;
+				}.bind(this);
 				img.src = 'http://epic.gsfc.nasa.gov/epic-archive/jpg/' + TEST_IMG + '.jpg';
 			}
 		},
@@ -102,6 +106,6 @@
 		return [parseInt(dateParts[0], 10), dateParts[1] - 1, parseInt(dateParts[2])];
 	}
 
-	app.init();
+	this.app = app.init();
 
 })(this, this.ortho);

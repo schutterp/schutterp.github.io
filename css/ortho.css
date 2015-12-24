@@ -103,8 +103,20 @@ h1 {
 	transition: opacity 1s;
 }
 
-#epic-img.in {
+body.show-epic {
+	background-color: #000;
+	-webkit-transition: background-color 1s;
+	transition: background-color 1s;
+}
+
+body.show-epic #epic-img {
 	opacity: 1;
+}
+
+body.show-epic .ortho-time, body.show-epic h1 {
+	color: #b2b2b2;
+	-webkit-transition: color 1s;
+	transition: color 1s;
 }
 
 .datetime-form {
