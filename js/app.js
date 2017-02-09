@@ -64,8 +64,8 @@
 		},
 
 		showEpicImage: function(date) {
-			var TEST_IMG = 'epic_1b_20151205145609_00';
-			var TEST_IMG_DATE = new Date(Date.UTC(2015, 11, 5, 14, 56));
+			var TEST_IMG = 'epic_1b_20170207124451_01';
+			var TEST_IMG_DATE = new Date(Date.UTC(2017, 1, 7, 12, 44));
 
 			var img = document.getElementById('epic-img');
 
@@ -74,7 +74,7 @@
 				img.onload = function () {
 					this.bodyEl.className += SHOW_CLASS_NAME;
 				}.bind(this);
-				img.src = 'http://epic.gsfc.nasa.gov/epic-archive/jpg/' + TEST_IMG + '.jpg';
+				img.src = 'http://epic.gsfc.nasa.gov/archive/natural/2017/02/07/png/' + TEST_IMG + '.png';
 			}
 		},
 
