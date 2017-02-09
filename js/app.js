@@ -8,7 +8,7 @@
 			this.bodyEl = document.body;
 			var startDateCopy = new Date(startDate);
 			document.getElementById('time-picker').value = startDate.toTimeString().slice(0,8);
-			document.getElementById('date-picker').valueAsDate = startDateCopy.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
+			document.getElementById('date-picker').valueAsDate = new Date(startDateCopy.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset()));
 
 			this.applyListeners();
 
